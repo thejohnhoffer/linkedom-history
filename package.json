@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "history": "5.x",
-    "linkedom": "^0.2"
+    "linkedom": "^0.13"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",

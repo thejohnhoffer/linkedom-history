@@ -1,6 +1,6 @@
 {
   "name": "linkedom-history",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "description": "A history hook for linkedom and react",
   "scripts": {
     "lint": "eslint src",

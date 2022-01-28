@@ -1,0 +1,57 @@
+{
+  "name": "linkedom-history",
+  "version": "1.0.0-alpha.1",
+  "description": "A history hook for linkedom and react",
+  "scripts": {
+    "lint": "eslint src",
+    "build": "rm -rf build && tsc -b",
+    "format": "prettier --ignore-path .eslintignore --write ."
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "author": "John T. Hoffer",
+  "repository": "github:thejohnhoffer/linkedom-history",
+  "exports": {
+    ".": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "keywords": [
+    "history",
+    "location",
+    "linkedom",
+    "testing",
+    "react"
+  ],
+  "dependencies": {
+    "@testing-library/react": "^13.0.0-alpha.5"
+  },
+  "peerDependencies": {
+    "history": "5.x",
+    "linkedom": "^0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/register": "^7.16.8",
+    "@types/node": "^17.0.13",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "@vitejs/plugin-react": "^1.1.4",
+    "eslint": "^8.6.0",
+    "esm": "^3.2.25",
+    "history": "^5.2.0",
+    "linkedom": "^0.13.0",
+    "prettier": "^2.5.1",
+    "react": "^18.0.0-rc.0",
+    "react-dom": "^18.0.0-rc.0",
+    "tsm": "^2.2.1",
+    "typescript": "^4.5.4",
+    "uvu": "^0.5.3"
+  }
+}

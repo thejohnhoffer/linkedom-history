@@ -19,9 +19,7 @@ Then install this module
 pnpm install linkedom-history
 ```
 
-Or, run `npm install` or `yarn add`, based on your package manager. To [avoid duplicate dependencies](https://github.com/remix-run/react-router/pull/7586#issuecomment-991703987).
-
-Use with a version of `likedom`, `history`, and `react` as follows:
+Or, run `npm install` or `yarn add`, based on your package manager. Use with a version of `likedom`, `history`, and `react` as follows:
 
 ```jsx
 import { renderElement, resetDocument } from "./linkedom-history";

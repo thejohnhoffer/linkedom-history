@@ -75,9 +75,9 @@ const parseHTML = (text: string) => {
       g.IS_REACT_ACT_ENVIRONMENT = true;
       g.document = doc;
     })(global, doc);
-    return true;
+    return doc;
   }
-  return false;
+  return doc;
 };
 
 const resetDocument = (main: string) => {

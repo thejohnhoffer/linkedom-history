@@ -1,4 +1,4 @@
-import { parseHTML } from "linkedom";
+import { parseHTML as parser } from "linkedom";
 import { render } from "@testing-library/react";
 import { parsePath, createMemoryHistory } from "history";
 
@@ -41,15 +41,13 @@ const proxyApplyUrl = (fn: HistFn) => {
   });
 };
 
-const makeGlobalDocument = (main: string) => {
-  const popstate = "popstate";
-  const root = `<${main}></${main}>`;
+const parseHTML = (text: string) => {
+  const view = parser(text);
   const history = createMemoryHistory();
-  const { document } = parseHTML(`<body>${root}</body>`);
-  const popEvent = document.createEvent("CustomEvent");
-  popEvent.initCustomEvent(popstate, false, false, null);
-  history.listen(() => document.dispatchEvent(popEvent));
-  return proxyGet(document, "defaultView", (doc: unknown) => {
+  const popEvent = view.document.createEvent("CustomEvent");
+  popEvent.initCustomEvent("popstate", false, false, null);
+  history.listen(() => view.document.dispatchEvent(popEvent));
+  const doc = proxyGet(view.document, "defaultView", (doc: unknown) => {
     if (isDoc(doc)) {
       const win = proxyGet(doc.defaultView, "history", () => {
         return new Proxy(history, {
@@ -71,16 +69,18 @@ const makeGlobalDocument = (main: string) => {
       return proxyGet(win, "location", toLocation);
     }
   });
+  return {...view, document: doc};
 };
 
 const resetDocument = (main: string) => {
-  const doc = makeGlobalDocument(main);
-  if (isObj(global) && isDoc(doc)) {
+  const root = `<${main}></${main}>`;
+  const view = parseHTML(`<body>${root}</body>`);
+  if (isObj(global) && isDoc(view.document)) {
     ((g: Obj, doc: Doc) => {
       g.window = { HTMLIFrameElement: Boolean };
       g.IS_REACT_ACT_ENVIRONMENT = true;
       g.document = doc;
-    })(global, doc);
+    })(global, view.document);
     return true;
   }
   return false;
@@ -96,4 +96,4 @@ const renderElement = (main: string, element: ReactElement) => {
   return container;
 };
 
-export { renderElement, resetDocument };
+export { renderElement, resetDocument, parseHTML };

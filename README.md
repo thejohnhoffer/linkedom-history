@@ -5,7 +5,7 @@
 [npm_version]: https://badge.fury.io/js/linkedom-history.svg
 [npm_version_url]: https://www.npmjs.com/package/linkedom-history
 
-This is a package that adds [history][history] to linkedom][linkedom];
+This is a package that adds [history][history] to [linkedom][linkedom];
 
 [history]: https://github.com/remix-run/history
 [linkedom]: https://github.com/WebReflection/linkedom

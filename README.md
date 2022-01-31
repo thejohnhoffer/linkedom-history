@@ -5,12 +5,17 @@
 [npm_version]: https://badge.fury.io/js/linkedom-history.svg
 [npm_version_url]: https://www.npmjs.com/package/linkedom-history
 
+This is a package that adds [history][history] to linkedom][linkedom];
+
+[history]: https://github.com/remix-run/history
+[linkedom]: https://github.com/WebReflection/linkedom
+
 ## Installation and Example
 
-Install peer dependencies, as well as `react`:
+Install peer dependencies:
 
 ```
-pnpm add history linkedom react
+pnpm add history linkedom
 ```
 
 Then install this module
@@ -19,21 +24,16 @@ Then install this module
 pnpm install linkedom-history
 ```
 
-Or, run `npm install` or `yarn add`, based on your package manager. Use with a version of `likedom`, `history`, and `react` as follows:
+Or, run `npm install` or `yarn add`, based on your package manager. Use with a version of `likedom` and `history` as follows:
 
 ```jsx
-import { renderElement, resetDocument } from "./linkedom-history";
-import { createElement } from "react";
+import { parseHTML } from "./linkedom-history";
 
-function renderExample(props = {}) {
-  const element = createElement("div", props);
-  return renderElement("main", element);
-}
-
-function reset() {
-  return resetDocument("main");
-}
+const doc = parseHTML("<body></body>").document;
+const { history, location } = doc.defaultView;
 ```
+
+The `parseHTML` function acts in place of the function of the same name from `linkedom`. The `linkedom-history` also provides `renderElement` and `resetDocument` for testing `React` libraries.
 
 ## Contributing
 

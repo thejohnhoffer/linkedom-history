@@ -1,4 +1,4 @@
-import { parseHTML } from "linkedom";
+import { parseHTML as parser } from "linkedom";
 import { render } from "@testing-library/react";
 import { parsePath, createMemoryHistory } from "history";
 
@@ -41,15 +41,13 @@ const proxyApplyUrl = (fn: HistFn) => {
   });
 };
 
-const makeGlobalDocument = (main: string) => {
-  const popstate = "popstate";
-  const root = `<${main}></${main}>`;
+const parseHTML = (text: string) => {
+  const { document } = parser(text);
   const history = createMemoryHistory();
-  const { document } = parseHTML(`<body>${root}</body>`);
   const popEvent = document.createEvent("CustomEvent");
-  popEvent.initCustomEvent(popstate, false, false, null);
+  popEvent.initCustomEvent("popstate", false, false, null);
   history.listen(() => document.dispatchEvent(popEvent));
-  return proxyGet(document, "defaultView", (doc: unknown) => {
+  const doc = proxyGet(document, "defaultView", (doc: unknown) => {
     if (isDoc(doc)) {
       const win = proxyGet(doc.defaultView, "history", () => {
         return new Proxy(history, {
@@ -71,10 +69,6 @@ const makeGlobalDocument = (main: string) => {
       return proxyGet(win, "location", toLocation);
     }
   });
-};
-
-const resetDocument = (main: string) => {
-  const doc = makeGlobalDocument(main);
   if (isObj(global) && isDoc(doc)) {
     ((g: Obj, doc: Doc) => {
       g.window = { HTMLIFrameElement: Boolean };
@@ -84,6 +78,11 @@ const resetDocument = (main: string) => {
     return true;
   }
   return false;
+};
+
+const resetDocument = (main: string) => {
+  const root = `<${main}></${main}>`;
+  return parseHTML(`<body>${root}</body>`);
 };
 
 const find = (document: Doc, main: string) => {
@@ -96,4 +95,4 @@ const renderElement = (main: string, element: ReactElement) => {
   return container;
 };
 
-export { renderElement, resetDocument };
+export { renderElement, resetDocument, parseHTML };

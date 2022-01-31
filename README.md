@@ -27,7 +27,7 @@ pnpm install linkedom-history
 Or, run `npm install` or `yarn add`, based on your package manager. Use with a version of `likedom` and `history` as follows:
 
 ```jsx
-import { parseHTML } from "./linkedom-history";
+import { parseHTML } from "linkedom-history";
 
 const doc = parseHTML("<body></body>").document;
 const { history, location } = doc.defaultView;

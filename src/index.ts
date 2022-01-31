@@ -42,12 +42,12 @@ const proxyApplyUrl = (fn: HistFn) => {
 };
 
 const parseHTML = (text: string) => {
-  const { document } = parser(text);
+  const view = parser(text);
   const history = createMemoryHistory();
-  const popEvent = document.createEvent("CustomEvent");
+  const popEvent = view.document.createEvent("CustomEvent");
   popEvent.initCustomEvent("popstate", false, false, null);
-  history.listen(() => document.dispatchEvent(popEvent));
-  const doc = proxyGet(document, "defaultView", (doc: unknown) => {
+  history.listen(() => view.document.dispatchEvent(popEvent));
+  const doc = proxyGet(view.document, "defaultView", (doc: unknown) => {
     if (isDoc(doc)) {
       const win = proxyGet(doc.defaultView, "history", () => {
         return new Proxy(history, {
@@ -69,20 +69,21 @@ const parseHTML = (text: string) => {
       return proxyGet(win, "location", toLocation);
     }
   });
-  if (isObj(global) && isDoc(doc)) {
-    ((g: Obj, doc: Doc) => {
-      g.window = { HTMLIFrameElement: Boolean };
-      g.IS_REACT_ACT_ENVIRONMENT = true;
-      g.document = doc;
-    })(global, doc);
-    return doc;
-  }
-  return doc;
+  return {...view, document: doc};
 };
 
 const resetDocument = (main: string) => {
   const root = `<${main}></${main}>`;
-  return parseHTML(`<body>${root}</body>`);
+  const view = parseHTML(`<body>${root}</body>`);
+  if (isObj(global) && isDoc(view.document)) {
+    ((g: Obj, doc: Doc) => {
+      g.window = { HTMLIFrameElement: Boolean };
+      g.IS_REACT_ACT_ENVIRONMENT = true;
+      g.document = doc;
+    })(global, view.document);
+    return true;
+  }
+  return false;
 };
 
 const find = (document: Doc, main: string) => {

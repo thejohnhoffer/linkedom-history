@@ -8,7 +8,7 @@
 [codecov_url]: https://codecov.io/gh/thejohnhoffer/linkedom-history
 
 
-This is a package that adds [history][history] to [linkedom][linkedom];
+This is a package that adds [history][history] to [linkedom][linkedom].
 
 [history]: https://github.com/remix-run/history
 [linkedom]: https://github.com/WebReflection/linkedom

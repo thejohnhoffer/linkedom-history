@@ -1,9 +1,12 @@
 # [Linkedom History](https://yarnpkg.com/package/linkedom-history)
 
-[![npm version][npm_version]][npm_version_url]
+[![codecov][codecov]][codecov_url] [![npm version][npm_version]][npm_version_url]
 
 [npm_version]: https://badge.fury.io/js/linkedom-history.svg
 [npm_version_url]: https://www.npmjs.com/package/linkedom-history
+[codecov]: https://codecov.io/gh/thejohnhoffer/linkedom-history/branch/main/graph/badge.svg?token=DOHK0DZI0Z
+[codecov_url]: https://codecov.io/gh/thejohnhoffer/linkedom-history
+
 
 This is a package that adds [history][history] to [linkedom][linkedom];
 

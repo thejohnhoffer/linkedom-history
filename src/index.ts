@@ -69,7 +69,7 @@ const parseHTML = (text: string) => {
       return proxyGet(win, "location", toLocation);
     }
   });
-  return {...view, document: doc};
+  return { ...view, document: doc };
 };
 
 const resetDocument = (main: string) => {
@@ -83,7 +83,6 @@ const resetDocument = (main: string) => {
     })(global, view.document);
     return true;
   }
-  return false;
 };
 
 const find = (document: Doc, main: string) => {

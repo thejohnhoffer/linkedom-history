@@ -10,28 +10,13 @@ type Doc = Required<Pick<Document, DocumentKeys>> & {
   defaultView: NonNullable<Document["defaultView"]>;
 };
 
-type Obj = Record<Key, unknown>;
 type Key = string | number | symbol;
 type Is<T> = (x: unknown) => x is T;
+type Obj<O = unknown> = Record<Key, O>;
 type HistFn = (to: To, _: unknown) => void;
-type ProxyFn<I extends unknown[]> = (..._: I) => unknown;
-type Handler = ProxyFn<[unknown]> | ProxyFn<[]>;
 
 const isObj: Is<Obj> = (x): x is Obj => typeof x === "object";
 const isDoc: Is<Doc> = (x): x is Doc => isObj(x) && "defaultView" in x;
-
-const proxyGet = (object: unknown, key: Key, handler: Handler) => {
-  if (isObj(object)) {
-    return new Proxy(object, {
-      get(target, prop, _) {
-        if (prop !== key) {
-          return Reflect.get(target, prop, _);
-        }
-        return handler(target);
-      },
-    });
-  }
-};
 
 const proxyApplyUrl = (fn: HistFn) => {
   return new Proxy(fn, {
@@ -42,34 +27,29 @@ const proxyApplyUrl = (fn: HistFn) => {
 };
 
 const parseHTML = (text: string) => {
-  const view = parser(text);
   const history = createMemoryHistory();
-  const popEvent = view.document.createEvent("CustomEvent");
-  popEvent.initCustomEvent("popstate", false, false, null);
-  history.listen(() => view.document.dispatchEvent(popEvent));
-  const doc = proxyGet(view.document, "defaultView", (doc: unknown) => {
-    if (isDoc(doc)) {
-      const win = proxyGet(doc.defaultView, "history", () => {
-        return new Proxy(history, {
-          get(targetHistory, prop, _) {
-            switch (prop) {
-              case "pushState":
-                return proxyApplyUrl(targetHistory.push);
-              case "replaceState":
-                return proxyApplyUrl(targetHistory.replace);
-              default:
-                return Reflect.get(targetHistory, prop, _);
-            }
-          },
-        });
-      });
-      const toLocation = () => {
-        return history.location;
-      };
-      return proxyGet(win, "location", toLocation);
-    }
-  });
-  return { ...view, document: doc };
+  ((g: Obj) => {
+    g.history = new Proxy(history, {
+      get(targetHistory, prop, _) {
+        switch (prop) {
+          case "pushState":
+            return proxyApplyUrl(targetHistory.push);
+          case "replaceState":
+            return proxyApplyUrl(targetHistory.replace);
+          default:
+            return Reflect.get(targetHistory, prop, _);
+        }
+      },
+    });
+    g.location = history.location;
+    g.window = {
+      ...(g.window as Obj),
+      HTMLIFrameElement: Boolean,
+    };
+    g.IS_REACT_ACT_ENVIRONMENT = true;
+  })(global);
+
+  return parser(text);
 };
 
 const resetDocument = (main: string) => {
@@ -77,8 +57,6 @@ const resetDocument = (main: string) => {
   const view = parseHTML(`<body>${root}</body>`);
   if (isObj(global) && isDoc(view.document)) {
     ((g: Obj, doc: Doc) => {
-      g.window = { HTMLIFrameElement: Boolean };
-      g.IS_REACT_ACT_ENVIRONMENT = true;
       g.document = doc;
     })(global, view.document);
     return true;

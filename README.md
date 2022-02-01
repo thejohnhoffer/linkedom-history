@@ -7,7 +7,6 @@
 [codecov]: https://codecov.io/gh/thejohnhoffer/linkedom-history/branch/main/graph/badge.svg?token=DOHK0DZI0Z
 [codecov_url]: https://codecov.io/gh/thejohnhoffer/linkedom-history
 
-
 This is a package that adds [history][history] to [linkedom][linkedom].
 
 [history]: https://github.com/remix-run/history
